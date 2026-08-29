@@ -1,21 +1,21 @@
-# TEST/PROD-Betrieb
+# TEST/PROD operation
 
 ## TEST
 
-1. Eine dedizierte Bring-TEST-Liste als Name in `BRING_DEFAULT_LIST` und exakt diesen Namen in `BRING_ALLOWED_LISTS` eintragen.
-2. `BRING_ENV=test` und einen eindeutigen `BRING_TEST_ITEM_PREFIX` setzen.
-3. Optional nur für Copy/Move/Multi-List: eine zweite dedizierte TEST-Liste als `BRING_TEST_SECOND_LIST` konfigurieren und beide Namen exakt in `BRING_ALLOWED_LISTS` führen.
-4. `npm run test:e2e` bewusst manuell und nur mit `BRING_ENV=test` starten. Der Harness erzeugt eigene synthetische Bildfixtures und präfixierte Artikel; ohne zweite Liste meldet er Multi-List ehrlich als Skip.
-5. Alle erzeugten TEST-Artikel/Fotos werden in `finally` entfernt und per Read-back auf Rückstandsfreiheit geprüft.
+1. Enter a dedicated Bring TEST list by name in `BRING_DEFAULT_LIST` and enter exactly that name in `BRING_ALLOWED_LISTS`.
+2. Set `BRING_ENV=test` and a unique `BRING_TEST_ITEM_PREFIX`.
+3. Optionally, only for copy/move/multi-list: configure a second dedicated TEST list as `BRING_TEST_SECOND_LIST` and list both names exactly in `BRING_ALLOWED_LISTS`.
+4. Start `npm run test:e2e` deliberately and manually, only with `BRING_ENV=test`. The harness creates its own synthetic image fixtures and prefixed items; without a second list, it reports multi-list honestly as a skip.
+5. All generated TEST items/photos are removed in `finally` and checked by read-back for complete cleanup.
 
 ## PROD
 
-- Erst nach expliziter Betreiberfreigabe und erfolgreichem TEST-Protokoll.
-- Nur ein gepinnter Release-Tag, keine Auto-Updates.
-- `BRING_ENV=prod`; `BRING_ALLOWED_LISTS` nur mit tatsächlich freigegebenen PROD-Listen füllen.
-- Vor jedem Write Listenauflösung und Allowlist prüfen; keine Fallback-Liste verwenden.
-- Keine Zugangsdaten, IDs oder Pfade ausgeben.
+- Only after explicit operator approval and a successful TEST record.
+- Only a pinned release tag; no auto-updates.
+- Set `BRING_ENV=prod`; populate `BRING_ALLOWED_LISTS` only with actually approved PROD lists.
+- Before every write, check list resolution and the allowlist; do not use a fallback list.
+- Do not output credentials, IDs, or paths.
 
 ## Rollback
 
-Kein Runtime-Wiring ist Bestandteil dieses Repositorys. Bei Problemen keine automatische Umschaltung: die bestehende `bring-safe`-Lösung bleibt unverändert, bis eine getestete und freigegebene Integration erfolgt.
+This repository includes no runtime wiring. If there are problems, do not switch automatically: the existing `bring-safe` solution remains unchanged until a tested and approved integration is in place.

@@ -11,9 +11,24 @@ describe('public package and thin-skill artifacts', () => {
     expect(pkg.private).toBeUndefined();
     expect(pkg.license).toBe('MIT');
     expect(pkg.description).toContain('MCP');
-    expect(pkg.files).toEqual(expect.arrayContaining(['dist/', 'README.md', 'SKILL.md', 'LICENSE', 'CHANGELOG.md', 'SECURITY.md', 'docs/']));
+    expect(pkg.files).toEqual(expect.arrayContaining(['dist/', 'README.md', 'README.de.md', 'SKILL.md', 'LICENSE', 'CHANGELOG.md', 'SECURITY.md', 'docs/']));
     expect(pkg.bin).toEqual({ 'bring-photo-mcp': 'dist/index.js' });
     expect(pkg.publishConfig).toEqual({ access: 'public' });
+  });
+
+  it('ships both language-specific READMEs with a clear language switch', async () => {
+    const [englishReadme, germanReadme] = await Promise.all([artifact('README.md'), artifact('README.de.md')]);
+    expect(englishReadme).toMatch(/\[Deutsch\]\(README\.de\.md\)/);
+    expect(germanReadme).toMatch(/\[English\]\(README\.md\)/);
+  });
+
+  it('keeps canonical public documentation in English without treating proper nouns as German prose', async () => {
+    const canonicalDocs = await Promise.all([
+      'README.md', 'SKILL.md', 'CHANGELOG.md', 'SECURITY.md', 'SPEC.md',
+      'docs/TEST-PROD.md', 'docs/MCP-CLIENT-CONFIGURATION.md', 'docs/MIGRATION-ROLLBACK.md',
+    ].map(artifact));
+    const canonicalText = canonicalDocs.join('\n');
+    expect(canonicalText).not.toMatch(/(?:Lokaler, agent-neutraler|Voraussetzungen:|Niemals `\.env`|Der offizielle MCP|Das Paket ist|Konfigurationsmodell erwartet|ist absichtlich kein Bestandteil|muss exakt|Ein nichtleerer|Der Harness erzeugt|Geschäftsregeln, Listen-Allowlist|Schreiboperationen sind erst erfolgreich|benötigt immer|Fehlertexte enthalten keine|Sicherheitsgrenzen und Rollback|gehören in Git|Acht-Fotos-Regression|TEST\/PROD-Betrieb|Eine dedizierte|eindeutigen `BRING_TEST_ITEM_PREFIX`|bewusst manuell|Alle erzeugten|Erst nach expliziter|Nur ein gepinnter|tatsächlich freigegebenen|Vor jedem Write|Keine Zugangsdaten|Kein Runtime-Wiring ist Bestandteil|Bei Problemen keine automatische)/u);
   });
 
   it('ships a public thin skill that routes deterministic operations only to MCP tools', async () => {

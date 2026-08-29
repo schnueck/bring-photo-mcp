@@ -2,7 +2,13 @@
 
 English | [Deutsch](README.de.md)
 
-A local, agent-neutral TypeScript MCP server for safe Bring! list operations with catalog-bound icons/categories and product photos. The executable stdio entrypoint starts only with locally validated environment variables; this repository contains no Hermes or client runtime configuration.
+**Turn product photos into Bring! shopping-list items.**
+
+Show your AI agent a package, label, or product photo and say: **“Add this to my shopping list.”** Bring Photo MCP lets the agent identify the product, match it with the Bring! catalog, select the right category and icon, attach the photo, and add the verified result to your Bring! list.
+
+It also provides the usual list operations—searching, adding, checking, moving, copying, and removing items—but the photo-first workflow is the point: less typing, fewer ambiguous product names, and the original product image directly on the list.
+
+Bring Photo MCP is a local, agent-neutral TypeScript MCP server. The executable stdio entrypoint starts only with locally validated environment variables; this repository contains no Hermes or client runtime configuration.
 
 ## Installation
 

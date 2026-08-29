@@ -2,7 +2,13 @@
 
 [English](README.md) | Deutsch
 
-Lokaler, agent-neutraler TypeScript-MCP-Server für sichere Bring!-Listenoperationen mit kataloggebundenen Icons/Kategorien und Produktfotos. Der ausführbare stdio-Entrypoint wird nur über lokal validierte Umgebungsvariablen gestartet; dieses Repository enthält keine Hermes-/Client-Runtime-Konfiguration.
+**Mach aus Produktfotos Einträge auf deiner Bring!-Einkaufsliste.**
+
+Zeige deinem KI-Agenten eine Verpackung, ein Etikett oder ein Produktfoto und sage: **„Setz das auf meine Einkaufsliste.“** Bring Photo MCP ermöglicht dem Agenten, das Produkt zu erkennen, es mit dem Bring!-Katalog abzugleichen, Kategorie und Icon auszuwählen, das Foto anzuhängen und den verifizierten Eintrag auf deiner Bring!-Liste zu speichern.
+
+Die üblichen Listenfunktionen sind ebenfalls dabei – Artikel suchen, hinzufügen, abhaken, verschieben, kopieren und entfernen. Der entscheidende Unterschied ist aber der Foto-Workflow: weniger Tippen, keine rätselhaften Artikelnamen und das ursprüngliche Produktbild direkt auf der Liste.
+
+Bring Photo MCP ist ein lokaler, agent-neutraler TypeScript-MCP-Server. Der ausführbare stdio-Entrypoint wird nur über lokal validierte Umgebungsvariablen gestartet; dieses Repository enthält keine Hermes-/Client-Runtime-Konfiguration.
 
 ## Installation
 

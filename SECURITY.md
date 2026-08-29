@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Before a first public release, only the current unreleased `1.0.0` code line is supported. Pin the exact package version and Node.js 20+ in any deployment.
+Until the first npm release, only the current `1.0.0` release-candidate code line is supported. Pin the exact package version and Node.js 20+ in any deployment.
 
 ## Reporting a vulnerability
 

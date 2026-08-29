@@ -45,7 +45,7 @@ describe('public package and thin-skill artifacts', () => {
   it('keeps distributable documentation free of private paths and person-specific operational data', async () => {
     const distributedText = (await Promise.all(['README.md', 'SKILL.md', 'CHANGELOG.md', 'SECURITY.md', '.env.example', 'docs/TEST-PROD.md', 'docs/MCP-CLIENT-CONFIGURATION.md', 'docs/MIGRATION-ROLLBACK.md'].map(artifact))).join('\n');
     expect(distributedText).not.toMatch(/\/home\//i);
-    expect(distributedText).not.toMatch(/Thomas/i);
+    expect(distributedText).not.toMatch(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i);
     expect(distributedText).not.toMatch(/BEGIN (?:RSA |OPENSSH )?PRIVATE KEY/i);
   });
 

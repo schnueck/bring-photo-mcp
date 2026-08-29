@@ -20,7 +20,7 @@ The official MCP TypeScript SDK (`@modelcontextprotocol/sdk`) is used. `npm star
 
 ## Distributable artifacts
 
-The package is prepared for public npm publication, constrained by an explicit `files` allowlist, and includes a `bring-photo-mcp` stdio binary entrypoint. This commit neither publishes nor installs anything. The public thin-skill guidance is in [SKILL.md](SKILL.md); tested client templates are in [docs/MCP-CLIENT-CONFIGURATION.md](docs/MCP-CLIENT-CONFIGURATION.md). Migration and rollback without runtime cutover are specified in [docs/MIGRATION-ROLLBACK.md](docs/MIGRATION-ROLLBACK.md).
+The package is prepared for public npm publication, constrained by an explicit `files` allowlist, and includes a `bring-photo-mcp` stdio binary entrypoint. The public thin-skill guidance is in [SKILL.md](SKILL.md); tested client templates are in [docs/MCP-CLIENT-CONFIGURATION.md](docs/MCP-CLIENT-CONFIGURATION.md). Migration and rollback without runtime cutover are specified in [docs/MIGRATION-ROLLBACK.md](docs/MIGRATION-ROLLBACK.md).
 
 ## Configuration
 

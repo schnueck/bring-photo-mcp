@@ -4,7 +4,7 @@
   "description": "Agent-neutral MCP stdio server for verified Bring shopping-list operations with catalog classification and product photos.",
   "type": "module",
   "license": "MIT",
-  "author": "Thomas Schnücker",
+  "author": "Thomas Schnuecker",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/schnueck/bring-photo-mcp.git"

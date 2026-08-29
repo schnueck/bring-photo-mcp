@@ -20,7 +20,7 @@ Der offizielle MCP TypeScript SDK (`@modelcontextprotocol/sdk`) wird verwendet. 
 
 ## Veröffentlichbare Artefakte
 
-Das Paket ist für eine öffentliche npm-Veröffentlichung vorbereitet, wird durch eine explizite `files`-Allowlist begrenzt und enthält einen `bring-photo-mcp`-stdio-Binary-Entrypoint. Dieser Commit veröffentlicht oder installiert nichts. Die öffentliche Thin-Skill-Anleitung steht in [SKILL.md](SKILL.md); getestete Client-Vorlagen stehen in [docs/MCP-CLIENT-CONFIGURATION.md](docs/MCP-CLIENT-CONFIGURATION.md). Migration und Rollback ohne Runtime-Umschaltung sind in [docs/MIGRATION-ROLLBACK.md](docs/MIGRATION-ROLLBACK.md) festgelegt.
+Das Paket ist für eine öffentliche npm-Veröffentlichung vorbereitet, wird durch eine explizite `files`-Allowlist begrenzt und enthält einen `bring-photo-mcp`-stdio-Binary-Entrypoint. Die öffentliche Thin-Skill-Anleitung steht in [SKILL.md](SKILL.md); getestete Client-Vorlagen stehen in [docs/MCP-CLIENT-CONFIGURATION.md](docs/MCP-CLIENT-CONFIGURATION.md). Migration und Rollback ohne Runtime-Umschaltung sind in [docs/MIGRATION-ROLLBACK.md](docs/MIGRATION-ROLLBACK.md) festgelegt.
 
 ## Konfiguration
 

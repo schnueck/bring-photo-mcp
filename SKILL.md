@@ -2,7 +2,7 @@
 name: bring-photo-mcp
 description: Use for safe Bring list and photo operations via MCP.
 version: 1.0.0
-author: Bring Photo MCP contributors
+author: Thomas Schnuecker
 metadata:
   mcp_server: bring-photo-mcp
   version: 1.0.0

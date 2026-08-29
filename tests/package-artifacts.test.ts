@@ -1,0 +1,51 @@
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { describe, expect, it } from 'vitest';
+
+const root = resolve(import.meta.dirname, '..');
+const artifact = (path: string) => readFile(resolve(root, path), 'utf8');
+
+describe('public package and thin-skill artifacts', () => {
+  it('publishes non-private npm metadata with an explicit allowlist', async () => {
+    const pkg = JSON.parse(await artifact('package.json')) as Record<string, unknown>;
+    expect(pkg.private).toBeUndefined();
+    expect(pkg.license).toBe('MIT');
+    expect(pkg.description).toContain('MCP');
+    expect(pkg.files).toEqual(expect.arrayContaining(['dist/', 'README.md', 'SKILL.md', 'LICENSE', 'CHANGELOG.md', 'SECURITY.md', 'docs/']));
+    expect(pkg.bin).toEqual({ 'bring-photo-mcp': 'dist/index.js' });
+    expect(pkg.publishConfig).toEqual({ access: 'public' });
+  });
+
+  it('ships a public thin skill that routes deterministic operations only to MCP tools', async () => {
+    const skill = await artifact('SKILL.md');
+    for (const tool of ['bring_search_catalog', 'bring_suggest_classification', 'bring_add_item', 'bring_copy_item', 'bring_move_item']) expect(skill).toContain(`\`${tool}`);
+    expect(skill).toMatch(/do not .*Bring.*request/i);
+    expect(skill).toMatch(/30 Unicode code points/i);
+    expect(skill).toMatch(/icon.*category.*invariant/i);
+    expect(skill).toMatch(/duplicate_policy=fail/i);
+    expect(skill).toMatch(/target.*verified.*before.*source.*remove/i);
+    expect(skill).toMatch(/per-list.*partial/i);
+  });
+
+  it('keeps distributable documentation free of private paths and person-specific operational data', async () => {
+    const distributedText = (await Promise.all(['README.md', 'SKILL.md', 'CHANGELOG.md', 'SECURITY.md', '.env.example', 'docs/TEST-PROD.md', 'docs/MCP-CLIENT-CONFIGURATION.md', 'docs/MIGRATION-ROLLBACK.md'].map(artifact))).join('\n');
+    expect(distributedText).not.toMatch(/\/home\//i);
+    expect(distributedText).not.toMatch(/Thomas/i);
+    expect(distributedText).not.toMatch(/BEGIN (?:RSA |OPENSSH )?PRIVATE KEY/i);
+  });
+
+  it('provides publication, security, configuration, client examples and one-release migration rollback guidance', async () => {
+    const [license, changelog, security, env, clients, migration] = await Promise.all([
+      artifact('LICENSE'), artifact('CHANGELOG.md'), artifact('SECURITY.md'), artifact('.env.example'), artifact('docs/MCP-CLIENT-CONFIGURATION.md'), artifact('docs/MIGRATION-ROLLBACK.md'),
+    ]);
+    expect(license).toContain('MIT License');
+    expect(changelog).toContain('1.0.0');
+    expect(security).toMatch(/do not.*credential/i);
+    expect(env.split(/\r?\n/).filter((line) => /^(?:BRING_)?(?:PASSWORD|TOKEN|SECRET)=/i.test(line))).toEqual(['BRING_PASSWORD=']);
+    expect(clients).toContain('stdio');
+    expect(clients).toContain('Hermes');
+    expect(clients).toContain('OpenClaw');
+    expect(migration).toMatch(/one release/i);
+    expect(migration).toContain('bring-safe');
+  });
+});

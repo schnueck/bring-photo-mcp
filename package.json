@@ -1,0 +1,59 @@
+{
+  "name": "bring-photo-mcp",
+  "version": "1.0.0",
+  "description": "Agent-neutral MCP stdio server for verified Bring shopping-list operations with catalog classification and product photos.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Thomas Schnücker",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schnueck/bring-photo-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/schnueck/bring-photo-mcp/issues"
+  },
+  "homepage": "https://github.com/schnueck/bring-photo-mcp#readme",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "bring",
+    "shopping-list",
+    "photos"
+  ],
+  "engines": { "node": ">=20" },
+  "bin": { "bring-photo-mcp": "dist/index.js" },
+  "publishConfig": { "access": "public" },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/",
+    "README.md",
+    "SKILL.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    ".env.example",
+    "docs/"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "start": "npm run build && node dist/index.js",
+    "test:e2e": "npm run build && node dist/e2e.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "zod": "4.5.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.1",
+    "@types/node": "22.19.11",
+    "eslint": "9.39.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.48.1",
+    "vitest": "4.1.11"
+  }
+}

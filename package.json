@@ -1,8 +1,8 @@
 {
   "name": "bring-photo-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "mcpName": "io.github.schnueck/bring-photo-mcp",
-  "description": "Agent-neutral MCP stdio server for verified Bring shopping-list operations with catalog classification and product photos.",
+  "description": "Add products to Bring! from a photo — MCP for AI recognition, catalog matching, and verified writes.",
   "type": "module",
   "license": "MIT",
   "author": "Thomas Schnuecker",
@@ -21,9 +21,15 @@
     "shopping-list",
     "photos"
   ],
-  "engines": { "node": ">=20" },
-  "bin": { "bring-photo-mcp": "dist/index.js" },
-  "publishConfig": { "access": "public" },
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "bring-photo-mcp": "dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [

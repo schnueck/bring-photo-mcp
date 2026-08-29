@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file.
 
+## 1.0.2 - 2026-08-29
+
+### Changed
+
+- Repositioned the package and Official MCP Registry descriptions around the photo-first workflow.
+- Updated public skill metadata to the same release version.
+
 ## 1.0.1 - 2026-08-29
 
 ### Added

@@ -66,7 +66,7 @@ describe('public package and thin-skill artifacts', () => {
       artifact('LICENSE'), artifact('CHANGELOG.md'), artifact('SECURITY.md'), artifact('.env.example'), artifact('docs/MCP-CLIENT-CONFIGURATION.md'), artifact('docs/MIGRATION-ROLLBACK.md'),
     ]);
     expect(license).toContain('MIT License');
-    expect(changelog).toContain('1.0.1');
+    expect(changelog).toContain('1.0.2');
     expect(security).toMatch(/do not.*credential/i);
     expect(env.split(/\r?\n/).filter((line) => /^(?:BRING_)?(?:PASSWORD|TOKEN|SECRET)=/i.test(line))).toEqual(['BRING_PASSWORD=']);
     expect(clients).toContain('stdio');

@@ -8,7 +8,7 @@ const text = (value: unknown) => ({ content: [{ type: 'text' as const, text: JSO
 const tool = <T extends z.ZodType>(server: McpServer, toolName: string, inputSchema: T, handler: (input: z.output<T>) => Promise<unknown>) => server.registerTool(toolName, { description: `Bring Photo MCP: ${toolName}`, inputSchema }, (async (input: unknown) => { try { return text(await handler(input as z.output<T>)); } catch (error) { return { content: [{ type: 'text' as const, text: JSON.stringify({ status: 'error', error: safeErrorMessage(error) }) }], isError: true }; } }) as never);
 
 export function createMcpServer(service: BringService): McpServer {
-  const server = new McpServer({ name: 'bring-photo-mcp', version: '1.0.1' });
+  const server = new McpServer({ name: 'bring-photo-mcp', version: '1.0.2' });
   tool(server, 'bring_list_lists', z.object({}), async () => service.listLists());
   tool(server, 'bring_list_items', z.object({ list }), async ({ list }) => service.listItems(list));
   tool(server, 'bring_search_catalog', z.object({ query: name, locale: z.string().optional(), limit: z.number().int().min(1).max(50).optional() }), async ({ query, locale, limit }) => service.searchCatalog(query, locale, limit));

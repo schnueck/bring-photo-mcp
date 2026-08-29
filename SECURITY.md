@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Until the first npm release, only the current `1.0.0` release-candidate code line is supported. Pin the exact package version and Node.js 20+ in any deployment.
+The current `1.0.x` release line is supported. Pin the exact package version and Node.js 20+ in any deployment.
 
 ## Reporting a vulnerability
 

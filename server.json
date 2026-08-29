@@ -1,0 +1,89 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.schnueck/bring-photo-mcp",
+  "description": "Verified Bring shopping-list operations with catalog classification and optional product photos.",
+  "repository": {
+    "url": "https://github.com/schnueck/bring-photo-mcp",
+    "source": "github"
+  },
+  "version": "1.0.1",
+  "websiteUrl": "https://github.com/schnueck/bring-photo-mcp#readme",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "bring-photo-mcp",
+      "version": "1.0.1",
+      "runtimeHint": "npx",
+      "runtimeArguments": [
+        {
+          "type": "positional",
+          "value": "-y"
+        }
+      ],
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "BRING_ENV",
+          "description": "Runtime boundary: use test for dedicated test lists or prod for explicitly allowlisted production lists.",
+          "isRequired": true,
+          "isSecret": false,
+          "format": "string",
+          "choices": ["test", "prod"]
+        },
+        {
+          "name": "BRING_EMAIL",
+          "description": "Email address of the Bring account.",
+          "isRequired": true,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "BRING_PASSWORD",
+          "description": "Password of the Bring account. Store it only in the client or secret-manager environment.",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "BRING_DEFAULT_LIST",
+          "description": "Exact name of the default Bring list.",
+          "isRequired": true,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "BRING_ALLOWED_LISTS",
+          "description": "Comma-separated exact names of every Bring list the server may access.",
+          "isRequired": true,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "BRING_LOCALE",
+          "description": "Bring catalog locale.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string",
+          "default": "de-DE"
+        },
+        {
+          "name": "BRING_TEST_ITEM_PREFIX",
+          "description": "Required non-empty item-name prefix for opt-in live E2E runs in test mode.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string",
+          "default": "MCP-TEST-"
+        },
+        {
+          "name": "BRING_TEST_SECOND_LIST",
+          "description": "Optional exact name of a second dedicated test list for copy, move, and multi-list E2E checks.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}

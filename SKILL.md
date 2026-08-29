@@ -1,11 +1,11 @@
 ---
 name: bring-photo-mcp
 description: Use for safe Bring list and photo operations via MCP.
-version: 1.0.0
+version: 1.0.1
 author: Thomas Schnuecker
 metadata:
   mcp_server: bring-photo-mcp
-  version: 1.0.0
+  version: 1.0.1
   hermes:
     tags: [bring, shopping-list, photos, mcp]
     related_skills: [bring-shopping-lists]

@@ -10,10 +10,22 @@ describe('public package and thin-skill artifacts', () => {
     const pkg = JSON.parse(await artifact('package.json')) as Record<string, unknown>;
     expect(pkg.private).toBeUndefined();
     expect(pkg.license).toBe('MIT');
+    expect(pkg.mcpName).toBe('io.github.schnueck/bring-photo-mcp');
     expect(pkg.description).toContain('MCP');
     expect(pkg.files).toEqual(expect.arrayContaining(['dist/', 'README.md', 'README.de.md', 'SKILL.md', 'LICENSE', 'CHANGELOG.md', 'SECURITY.md', 'docs/']));
     expect(pkg.bin).toEqual({ 'bring-photo-mcp': 'dist/index.js' });
     expect(pkg.publishConfig).toEqual({ access: 'public' });
+  });
+
+  it('publishes official MCP Registry metadata that matches the npm package', async () => {
+    const [pkgText, serverText] = await Promise.all([artifact('package.json'), artifact('server.json')]);
+    const pkg = JSON.parse(pkgText) as { name: string; version: string; mcpName: string };
+    const server = JSON.parse(serverText) as { name: string; version: string; packages: Array<{ identifier: string; version: string; transport: { type: string } }> };
+    expect(server.name).toBe(pkg.mcpName);
+    expect(server.version).toBe(pkg.version);
+    expect(server.packages).toEqual(expect.arrayContaining([expect.objectContaining({ identifier: pkg.name, version: pkg.version, transport: { type: 'stdio' } })]));
+    expect(serverText).not.toMatch(/\/home\//i);
+    expect(serverText).not.toMatch(/@[A-Z0-9.-]+\.[A-Z]{2,}/i);
   });
 
   it('ships both language-specific READMEs with a clear language switch', async () => {
@@ -54,7 +66,7 @@ describe('public package and thin-skill artifacts', () => {
       artifact('LICENSE'), artifact('CHANGELOG.md'), artifact('SECURITY.md'), artifact('.env.example'), artifact('docs/MCP-CLIENT-CONFIGURATION.md'), artifact('docs/MIGRATION-ROLLBACK.md'),
     ]);
     expect(license).toContain('MIT License');
-    expect(changelog).toContain('1.0.0');
+    expect(changelog).toContain('1.0.1');
     expect(security).toMatch(/do not.*credential/i);
     expect(env.split(/\r?\n/).filter((line) => /^(?:BRING_)?(?:PASSWORD|TOKEN|SECRET)=/i.test(line))).toEqual(['BRING_PASSWORD=']);
     expect(clients).toContain('stdio');

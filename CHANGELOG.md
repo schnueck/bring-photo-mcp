@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented in this file.
 
+## 1.0.1 - 2026-08-29
+
+### Added
+
+- Official MCP Registry metadata under `io.github.schnueck/bring-photo-mcp`.
+- Transparent AI-assisted development and verification disclosure in both READMEs.
+
+### Changed
+
+- Public author metadata standardized as `Thomas Schnuecker`.
+
 ## 1.0.0 - 2026-08-29
 
 ### Added

@@ -1,6 +1,6 @@
 ---
 name: bring-photo-mcp
-description: Use for safe Bring list and photo operations via MCP.
+description: Turn product photos into verified Bring! list items via MCP.
 version: 1.0.1
 author: Thomas Schnuecker
 metadata:
@@ -43,9 +43,11 @@ metadata:
 
 # Bring Photo MCP
 
+Show an AI agent a package, label, or product photo and say: **"Add this to my shopping list."** This skill guides the agent from visible product details through Bring! catalog classification to a verified list entry with the matching icon, category, and optional original photo.
+
 ## When to Use
 
-Use this skill for Bring shopping-list operations that need catalog-based classification, product-photo handling, and verified list writes.
+Use this skill primarily when a product should be added to Bring! from a photo. It also covers safe catalog search, ordinary list operations, photo attachment, and verified writes.
 
 ## Boundary
 

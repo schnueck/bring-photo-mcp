@@ -65,6 +65,10 @@ Write: `bring_add_item`, `bring_attach_photo`, `bring_replace_photo`, `bring_rem
 
 Error text contains no credentials, UUIDs, or image paths.
 
+## Development and verification
+
+This project was developed with AI-assisted coding and documentation tools under human direction and review. Its automated tests, isolated live E2E checks, and release artifacts were independently verified before publication. Thomas Schnuecker remains the project maintainer and is responsible for releases.
+
 ## Security boundaries and rollback
 
 Credentials, real list UUIDs, and product photos do not belong in Git, fixtures, or logs. This repository triggers no login or live operation. The existing `bring-safe` solution remains unchanged as the rollback until an explicitly approved cutover.

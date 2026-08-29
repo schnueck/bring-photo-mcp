@@ -65,6 +65,10 @@ Write: `bring_add_item`, `bring_attach_photo`, `bring_replace_photo`, `bring_rem
 
 Fehlertexte enthalten keine Credentials, UUIDs oder Bildpfade.
 
+## Entwicklung und Verifikation
+
+Dieses Projekt wurde unter menschlicher Leitung und Prüfung mit KI-gestützten Werkzeugen für Code und Dokumentation entwickelt. Automatisierte Tests, isolierte Live-E2E-Prüfungen und Release-Artefakte wurden vor der Veröffentlichung unabhängig verifiziert. Thomas Schnuecker bleibt Maintainer und trägt die Verantwortung für Veröffentlichungen.
+
 ## Sicherheitsgrenzen und Rollback
 
 Keine Credentials, echte Listen-UUIDs oder Produktbilder gehören in Git, Fixtures oder Logs. Dieses Repository löst keine Login- oder Live-Operation aus. Die bestehende `bring-safe`-Lösung bleibt bis zu einer ausdrücklich freigegebenen Umstellung unverändert der Rollback.

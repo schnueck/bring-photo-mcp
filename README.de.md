@@ -22,7 +22,7 @@ npm test
 npm run build
 ```
 
-Der offizielle MCP TypeScript SDK (`@modelcontextprotocol/sdk`) wird verwendet. `npm start` baut das Projekt und startet `src/index.ts` als stdio-Server. Der Start validiert die Konfiguration und authentifiziert erst danach gegen Bring; es gibt bewusst keine Hermes-/Client-Runtime-Konfiguration in diesem Repository.
+Der offizielle MCP TypeScript SDK (`@modelcontextprotocol/sdk`) wird verwendet. `npm start` baut das Projekt und startet `dist/index.js` als stdio-Server. Der Start validiert die Konfiguration und authentifiziert erst danach gegen Bring; es gibt bewusst keine Hermes-/Client-Runtime-Konfiguration in diesem Repository.
 
 ## Veröffentlichbare Artefakte
 
@@ -41,6 +41,12 @@ Niemals `.env` mit echten Werten einchecken. Das Konfigurationsmodell erwartet:
 - optional `BRING_TEST_SECOND_LIST` ausschließlich für die Multi-Listen-E2E
 
 `src/config.ts` validiert die Werte. In PROD akzeptiert der Service ausschließlich erlaubte Listen; die Produktruntime muss zusätzlich auf einen gepinnten Release-Tag zeigen. TEST verwendet eine eigene allowlistete Liste und ausschließlich temporär präfixierte Testartikel.
+
+## Automatische Wiederanmeldung (1.0.3)
+
+Nach einer ausdrücklichen HTTP-401-Antwort von Bring meldet sich der MCP mit dem konfigurierten Konto erneut an. Gleichzeitige Fehler teilen sich eine Wiederanmeldung; die Kontoidentität muss unverändert bleiben. Leseaufrufe werden höchstens einmal wiederholt, Schreibaufrufe niemals automatisch. Meldet ein Schreibvorgang einen Authentifizierungsfehler, zuerst den Listenstand prüfen und erst dann über einen neuen Auftrag entscheiden. Eine fehlgeschlagene Wiederanmeldung bricht ohne Endlosschleife ab; nach Behebung der Ursache den MCP neu verbinden. Öffentliche Katalog- und Bildabrufe erhalten keine Authentifizierungsheader.
+
+Zum Aktualisieren `bring-photo-mcp@1.0.3` in der MCP-Client-Konfiguration fest pinnen und diesen MCP-Server neu starten oder verbinden. Neue Zugangsdaten oder Konfigurationsfelder sind nicht nötig. Die [Änderungshistorie](CHANGELOG.md) beschreibt den Fix.
 
 ## Opt-in Live-E2E
 

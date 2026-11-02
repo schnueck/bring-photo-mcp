@@ -22,7 +22,7 @@ npm test
 npm run build
 ```
 
-The official MCP TypeScript SDK (`@modelcontextprotocol/sdk`) is used. `npm start` builds the project and starts `src/index.ts` as a stdio server. Startup validates the configuration and authenticates with Bring only afterwards; this repository intentionally contains no Hermes or client runtime configuration.
+The official MCP TypeScript SDK (`@modelcontextprotocol/sdk`) is used. `npm start` builds the project and starts `dist/index.js` as a stdio server. Startup validates the configuration and authenticates with Bring only afterwards; this repository intentionally contains no Hermes or client runtime configuration.
 
 ## Distributable artifacts
 
@@ -41,6 +41,12 @@ Never commit `.env` with real values. The configuration model expects:
 - optional `BRING_TEST_SECOND_LIST` exclusively for the multi-list E2E
 
 `src/config.ts` validates the values. In PROD, the service accepts only allowlisted lists; the production runtime must additionally point to a pinned release tag. TEST uses a dedicated allowlisted list and temporary prefixed test items only.
+
+## Authentication recovery (1.0.3)
+
+Long-running sessions automatically reauthenticate with the configured account after an explicit Bring HTTP 401. Concurrent failures share one renewal, and the account identity must remain unchanged. Read requests may retry once; writes are never automatically replayed. If a write reports an authentication failure, inspect the list before deciding whether to submit a new operation. Failed renewal stops cleanly rather than looping; reconnect the MCP after resolving the cause. Public catalog and image downloads never receive authentication headers.
+
+To update, pin `bring-photo-mcp@1.0.3` in your MCP client configuration and restart or reconnect that MCP server. No new credentials or configuration fields are required. See [the changelog](CHANGELOG.md) for the fix details.
 
 ## Opt-in live E2E
 

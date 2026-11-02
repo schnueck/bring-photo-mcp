@@ -2,6 +2,23 @@
 
 All notable changes to this project are documented in this file.
 
+## 1.0.3 - 2026-11-02
+
+### Fixed
+
+- Long-running MCP sessions now recover from an explicit Bring HTTP 401 by reauthenticating with the configured account. Previously, restarting the MCP server was necessary after its access token became invalid.
+- Concurrent requests and late responses from an older authentication generation share a single renewal instead of triggering a login storm. Successful renewal must retain the same account identity.
+- Read requests (GET/HEAD) are retried at most once after renewal. Mutating requests are never automatically replayed, avoiding duplicate or uncertain shopping-list changes.
+
+### Security
+
+- Validate authentication headers before adopting a token and sanitize malformed-header failures without exposing credentials or tokens.
+- Keep public asset requests unauthenticated and reject redirects for authenticated API requests. Network errors, HTTP 5xx responses, and failed renewal do not trigger retry loops.
+
+### Verification
+
+- Added deterministic authentication-recovery regressions covering concurrent renewal, bounded retries, identity changes, malformed headers, public-request isolation, and mutation non-replay.
+
 ## 1.0.2 - 2026-08-29
 
 ### Changed

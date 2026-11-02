@@ -6,13 +6,13 @@
     "url": "https://github.com/schnueck/bring-photo-mcp",
     "source": "github"
   },
-  "version": "1.0.2",
+  "version": "1.0.3",
   "websiteUrl": "https://github.com/schnueck/bring-photo-mcp#readme",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "bring-photo-mcp",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "runtimeHint": "npx",
       "runtimeArguments": [
         {

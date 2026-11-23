@@ -34,14 +34,6 @@ function encodeLegacyMutation(fields: { purchase: string; recently: string; spec
   return body.toString();
 }
 
-export function createLatin1Multipart(boundary: string, fields: Record<string, string>): { contentType: string; body: Buffer } {
-  const chunks: Buffer[] = [];
-  for (const [name, value] of Object.entries(fields)) {
-    chunks.push(Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="${name}"\r\n\r\n`, 'ascii'), Buffer.from(value, 'latin1'), Buffer.from('\r\n', 'ascii'));
-  }
-  chunks.push(Buffer.from(`--${boundary}--\r\n`, 'ascii'));
-  return { contentType: `multipart/form-data; boundary=${boundary}`, body: Buffer.concat(chunks) };
-}
 
 export interface BringTransport {
   baseUrl: string;
@@ -84,9 +76,13 @@ export class BringHttpAdapter implements BringGateway {
   }
 
   async createDetail(listUuid: string, input: Omit<Detail, 'uuid' | 'imageUrl'>): Promise<Detail> {
-    const boundary = `----bring-${crypto.randomUUID()}`;
-    const multipart = createLatin1Multipart(boundary, { listUuid, itemId: input.itemId, userIconItemId: input.userIconItemId, userSectionId: input.userSectionId, assignedTo: '' });
-    const response = await this.transport.fetch('/bringlistitemdetails/', { method: 'POST', headers: { ...this.transport.headers, 'Content-Type': multipart.contentType }, body: new Uint8Array(multipart.body) });
+    const form = new FormData();
+    form.set('listUuid', listUuid);
+    form.set('itemId', input.itemId);
+    form.set('userIconItemId', input.userIconItemId);
+    form.set('userSectionId', input.userSectionId);
+    form.set('assignedTo', '');
+    const response = await this.transport.fetch('/bringlistitemdetails/', { method: 'POST', headers: this.transport.headers, body: form });
     const body = await response.json().catch(() => ({})) as Partial<Detail>;
     if (response.status !== 201 || !body.uuid) throw new BringError(ErrorCodes.UPSTREAM_FAILURE, `Detail creation returned HTTP ${response.status}`);
     return { ...input, uuid: body.uuid, imageUrl: body.imageUrl };

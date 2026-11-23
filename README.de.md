@@ -48,6 +48,10 @@ Nach einer ausdrücklichen HTTP-401-Antwort von Bring meldet sich der MCP mit de
 
 Zum Aktualisieren `bring-photo-mcp@1.0.3` in der MCP-Client-Konfiguration fest pinnen und diesen MCP-Server neu starten oder verbinden. Neue Zugangsdaten oder Konfigurationsfelder sind nicht nötig. Die [Änderungshistorie](CHANGELOG.md) beschreibt den Fix.
 
+## Artikelverifizierung (1.0.4)
+
+Bring-Artikeldetails werden jetzt in UTF-8 übertragen. Umlaute in Artikelnamen und Kategorien bleiben beim Zurücklesen erhalten. Speichert Bring bei einem neuen Freitextartikel `Brot` statt `Toast`, meldet der MCP nach bestätigtem Read-back `ok` mit `ICON_REMAPPED`. Fehlende oder falsche Pflichtdetails bleiben ein Fehler. `bring-photo-mcp@1.0.4` fest pinnen und den MCP-Server neu verbinden. Bestehende Artikel werden nicht umgeschrieben.
+
 ## Opt-in Live-E2E
 
 `npm run test:e2e` ist absichtlich kein Bestandteil von `npm test` und wurde hier nicht ausgeführt. Es startet nur bei vollständig gesetzter Konfiguration und lehnt alles außer `BRING_ENV=test` ab. `BRING_ALLOWED_LISTS` muss exakt `BRING_DEFAULT_LIST` enthalten; mit `BRING_TEST_SECOND_LIST` muss sie exakt beide namentlich konfigurierten TEST-Listen enthalten. Ein nichtleerer `BRING_TEST_ITEM_PREFIX` ist Pflicht.

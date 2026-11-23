@@ -48,6 +48,10 @@ Long-running sessions automatically reauthenticate with the configured account a
 
 To update, pin `bring-photo-mcp@1.0.3` in your MCP client configuration and restart or reconnect that MCP server. No new credentials or configuration fields are required. See [the changelog](CHANGELOG.md) for the fix details.
 
+## Item verification (1.0.4)
+
+Bring item details now use UTF-8, so accents in item names and categories survive read-back. A confirmed `Toast` → `Brot` icon substitution for a new free-text item returns `ok` with `ICON_REMAPPED`; missing or mismatched required details still fail. Pin `bring-photo-mcp@1.0.4` and reconnect the MCP server. Existing items are not rewritten.
+
 ## Opt-in live E2E
 
 `npm run test:e2e` is deliberately not part of `npm test` and was not run here. It starts only with a fully configured environment and rejects anything other than `BRING_ENV=test`. `BRING_ALLOWED_LISTS` must contain exactly `BRING_DEFAULT_LIST`; with `BRING_TEST_SECOND_LIST`, it must contain exactly both named configured TEST lists. A non-empty `BRING_TEST_ITEM_PREFIX` is required.
@@ -56,7 +60,7 @@ The harness creates two synthetic PNG files in the temporary directory, verifies
 
 ## Architecture
 
-- `src/bring-adapter.ts`: deterministic Bring gateway interface and HTTP protocol adapter. Legacy item bodies are generated only with `URLSearchParams`; details are read through `bringlists/{listUuid}/details`; the catalog is loaded from `https://web.getbring.com/locale/catalog.{locale}.json`; detail metadata uses ISO-8859-1 multipart; photos use native `FormData` with the `imageData` field. An explicit `transferImage` gateway capability downloads source image bytes without Bring authentication and uploads them only to the target.
+- `src/bring-adapter.ts`: deterministic Bring gateway interface and HTTP protocol adapter. Legacy item bodies are generated only with `URLSearchParams`; details are read through `bringlists/{listUuid}/details`; the catalog is loaded from `https://web.getbring.com/locale/catalog.{locale}.json`; detail metadata uses native UTF-8 `FormData`; photos use native `FormData` with the `imageData` field. An explicit `transferImage` gateway capability downloads source image bytes without Bring authentication and uploads them only to the target.
 - `src/bring-service.ts`: business rules, list allowlisting, classification and duplicate rules, read-back verification, copy-before-delete for moves, and per-list results.
 - `src/mcp-server.ts`: 15 Zod-validated MCP tools; no transport layer.
 - `src/redaction.ts`: redacts password/token fields, UUID-like IDs, and local paths from error text.

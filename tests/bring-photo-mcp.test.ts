@@ -6,13 +6,16 @@ import {
   type Detail,
   type ListRecord,
 } from '../src/bring-service.js';
-import { BringHttpAdapter, createLatin1Multipart, encodeLegacyItemBody, type BringTransport } from '../src/bring-adapter.js';
+import { BringHttpAdapter, encodeLegacyItemBody, type BringTransport } from '../src/bring-adapter.js';
 import { redact } from '../src/redaction.js';
 import { createMcpServer } from '../src/mcp-server.js';
 
 const catalog: CatalogEntry[] = [
   { itemId: 'milk', name: 'Milch', sectionId: 'dairy', sectionName: 'Milchprodukte' },
   { itemId: 'tea', name: 'Tee', sectionId: 'drinks', sectionName: 'Getränke' },
+  { itemId: 'Toast', name: 'Toast', sectionId: 'Brot & Gebäck', sectionName: 'Brot & Gebäck' },
+  { itemId: 'Brot', name: 'Brot', sectionId: 'Brot & Gebäck', sectionName: 'Brot & Gebäck' },
+  { itemId: 'Knäckebrot', name: 'Knäckebrot', sectionId: 'Brot & Gebäck', sectionName: 'Brot & Gebäck' },
 ];
 
 class FakeBring implements BringGateway {
@@ -51,9 +54,16 @@ describe('Bring protocol and invariant regressions', () => {
     const body = encodeLegacyItemBody("Café 50% & Käse + O'Neil", 'größer + 2%');
     expect(Object.fromEntries(new URLSearchParams(body))).toEqual({ purchase: "Café 50% & Käse + O'Neil", recently: '', specification: 'größer + 2%', remove: '', sender: 'null' });
   });
-  it('2 creates Latin-1 detail metadata for ASCII and non-ASCII values', () => {
-    const payload = createLatin1Multipart('fixed', { listUuid: 'abc', itemId: 'Spülmittel', userIconItemId: 'Spülmittel', userSectionId: 'Küche', assignedTo: '' });
-    expect(payload.body.toString('latin1')).toContain('Spülmittel'); expect(payload.contentType).toContain('boundary=fixed');
+  it('2 submits detail names and categories that a UTF-8 multipart receiver reads exactly', async () => {
+    const send = vi.fn(async (_path: string, init: RequestInit) => {
+      const fields = Object.fromEntries(await new Request('https://example.invalid/', init).formData());
+      expect(fields).toEqual({ listUuid: 'test-list', itemId: 'Körnertoast', userIconItemId: 'Toast', userSectionId: 'Brot & Gebäck', assignedTo: '' });
+      return Response.json({ uuid: 'detail-test' }, { status: 201 });
+    });
+    const transport: BringTransport = { baseUrl: 'https://example.invalid', userUuid: 'test-user', headers: {}, putHeaders: {}, fetch: send, getJson: vi.fn(), fetchPublic: vi.fn() };
+    const adapter = new BringHttpAdapter(transport);
+    await expect(adapter.createDetail('test-list', { itemId: 'Körnertoast', userIconItemId: 'Toast', userSectionId: 'Brot & Gebäck' })).resolves.toMatchObject({ uuid: 'detail-test' });
+    expect(send).toHaveBeenCalledTimes(1);
   });
   it('3 adds, replaces and removes photo with read-back imageUrl verification', async () => {
     await service.addItem({ lists: ['test-list'], itemName: 'Milch', specification: 'Bio 1 l', iconItemId: 'milk', categoryId: 'dairy', duplicatePolicy: 'fail' });
@@ -73,6 +83,44 @@ describe('Bring protocol and invariant regressions', () => {
   it('6 uses the visible free-text name as detail identity while retaining the selected catalog icon', async () => {
     await service.addItem({ lists: ['test-list'], itemName: 'Lieblingsmilch', specification: 'Bio', iconItemId: 'milk', categoryId: 'dairy', duplicatePolicy: 'fail' });
     expect((await fake.getDetails('test-list'))).toContainEqual(expect.objectContaining({ itemId: 'Lieblingsmilch', userIconItemId: 'milk', userSectionId: 'dairy' }));
+  });
+  const toast = { lists: ['test-list'], itemName: 'Dinkel-Toast', specification: '', iconItemId: 'Toast', categoryId: 'Brot & Gebäck', duplicatePolicy: 'fail' as const };
+  it('verifies Dinkel-Toast when Bring stores the Brot icon, returning the actual icon and a warning', async () => {
+    const create = fake.createDetail.bind(fake);
+    const write = vi.spyOn(fake, 'putItem');
+    vi.spyOn(fake, 'createDetail').mockImplementation(async (id, input) => {
+      const persisted = await create(id, { ...input, userIconItemId: 'Brot' });
+      return { ...persisted, userIconItemId: input.userIconItemId }; // POST receipt does not prove the stored icon.
+    });
+    await expect(service.addItem(toast)).resolves.toMatchObject({ status: 'ok', results: [{ status: 'ok', persisted: { name: 'Dinkel-Toast', specification: '', iconItemId: 'Brot', categoryId: 'Brot & Gebäck' }, warnings: ['ICON_REMAPPED'] }] });
+    expect(write).toHaveBeenCalledExactlyOnceWith('test-list', 'Dinkel-Toast', '');
+  });
+  it.each([
+    { itemId: 'Anderer Artikel' },
+    { userIconItemId: 'Knäckebrot' },
+    { userIconItemId: 'Brot', userSectionId: 'drinks' },
+    { userIconItemId: '' },
+  ])('does not verify unrelated or incomplete detail read-back: %o', async (change) => {
+    const create = fake.createDetail.bind(fake);
+    vi.spyOn(fake, 'createDetail').mockImplementation(async (id, input) => {
+      const persisted = await create(id, { ...input, ...change });
+      return { ...persisted, ...input };
+    });
+    await expect(service.addItem({ ...toast, imagePath: '/tmp/a.jpg' })).resolves.toMatchObject({ status: 'error', results: [{ status: 'error', errorCode: 'VERIFICATION_FAILED' }] });
+    expect(fake.uploadedPaths).toEqual([]);
+  });
+  it('does not verify Körnertoast from the active item alone when its detail is missing', async () => {
+    vi.spyOn(fake, 'getDetails').mockResolvedValue([]);
+    await expect(service.addItem({ ...toast, itemName: 'Körnertoast' })).resolves.toMatchObject({ status: 'error', results: [{ status: 'error', errorCode: 'VERIFICATION_FAILED' }] });
+    expect((await fake.getItems('test-list')).purchase).toEqual([{ name: 'Körnertoast', specification: '' }]);
+  });
+  it('keeps the original when a move target stores Brot instead of the source Toast icon', async () => {
+    await service.addItem(toast);
+    const create = fake.createDetail.bind(fake);
+    vi.spyOn(fake, 'createDetail').mockImplementation((id, input) => create(id, { ...input, userIconItemId: 'Brot' }));
+    const remove = vi.spyOn(fake, 'removeItem');
+    await expect(service.moveItem({ sourceList: 'test-list', targetList: 'second-list', itemName: toast.itemName, includePhoto: false })).resolves.toMatchObject({ status: 'error', errorCode: 'VERIFICATION_FAILED' });
+    expect(remove).not.toHaveBeenCalled();
   });
   it('7 copies a photo through the gateway transfer capability, never a pseudo file path', async () => {
     await service.addItem({ lists: ['test-list'], itemName: 'Milch', specification: 'Bio', iconItemId: 'milk', categoryId: 'dairy', duplicatePolicy: 'fail', imagePath: '/tmp/a.jpg' });

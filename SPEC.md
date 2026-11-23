@@ -15,7 +15,7 @@ Provide a public, agent-neutral MCP server for safe Bring! shopping-list operati
 ## Hard invariants
 
 1. No successful create/copy/move may leave an item without a valid `userIconItemId` and `userSectionId`.
-2. A write is successful only after exact read-back of item name, specification, detail UUID, icon, category and requested photo state.
+2. A write is successful only after read-back of the exact item name, specification, matching detail identity and UUID, category and requested photo state. The icon must match exactly, except when adding a fresh free-text item with catalog icon `Toast` and Bring persists `Brot` in the same `Brot & Gebäck` category. Both icons must belong to that category in the current catalog; return the persisted icon and `warnings: ["ICON_REMAPPED"]`. This exception does not apply to copying, moving, unchecking or updating an active item.
 3. Move writes and verifies the target completely before removing the source.
 4. Multi-list writes return a result per list; partial success is never reported as total success.
 5. No direct edits inside `node_modules`.
@@ -66,7 +66,7 @@ All write results include per-list status, persisted fields, verification eviden
 ## Bring protocol requirements
 
 - Legacy item writes: form body created with `URLSearchParams`; special characters `%`, `&`, `+`, apostrophes and umlauts must round-trip.
-- Detail creation: `POST bringlistitemdetails/` using explicitly ISO-8859-1 encoded multipart metadata to avoid Mojibake.
+- Detail creation: `POST bringlistitemdetails/` using native UTF-8 `FormData` with an automatically generated multipart boundary. Latin-1 loses non-ASCII names and categories in Bring's read-back.
 - Photo upload: `PUT bringlistitemdetails/{uuid}/image` using native multipart field `imageData`.
 - Detail and photo endpoints require exact status and body validation followed by read-back.
 - Existing malformed/orphan detail records are ignored unless their exact `itemId` matches.
